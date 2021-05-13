@@ -1,8 +1,10 @@
 ﻿// NUnit 3 tests
 // See documentation : https://github.com/nunit/docs/wiki/NUnit-Documentation
 using System;
-using System.Collections;
 using System.Collections.Generic;
+
+using Monopoly.Models;
+
 using NUnit.Framework;
 
 namespace Monopoly
@@ -10,66 +12,103 @@ namespace Monopoly
     [TestFixture]
     public class TestClass
     {
+
+        [Test]
+        public void NullAgumentToInit()
+        {
+            Assert.Throws<ArgumentException>(() => new Monopoly(null));
+        }
+
+        [Test]
+        public void EmptyAgumentToInit()
+        {
+            Assert.Throws<ArgumentException>(() => new Monopoly(new[] {""}));
+        }
+
+        [Test]
+        public void AgumentToInit()
+        {
+            Assert.Throws<ArgumentException>(() => new Monopoly(new string[] { "Peter", "" }));
+        }
+
         [Test]
         public void GetPlayersListReturnCorrectList()
         {
-            string[] players = new string[]{ "Peter","Ekaterina","Alexander" };
-            Tuple<string, int>[] expectedPlayers = new Tuple<string, int>[]
-            {
-                new Tuple<string, int>("Peter",6000),
-                new Tuple<string, int>("Ekaterina",6000),
-                new Tuple<string, int>("Alexander",6000)
-            };
-            Monopoly monopoly = new Monopoly(players,3);
-            Tuple<string, int>[] actualPlayers = monopoly.GetPlayersList().ToArray();
+            var players = new[] { "Peter", "Ekaterina", "Alexander" };
 
+            var playerStartCash = 6000;
+            var expectedPlayers = new List<PlayerInfo>() {
+                new PlayerInfo("Peter",     playerStartCash),
+                new PlayerInfo("Ekaterina", playerStartCash),
+                new PlayerInfo("Alexander", playerStartCash)
+            };
+
+            var monopoly = new Monopoly(players);
+
+            var actualPlayers = monopoly.GetPlayersList();
             Assert.AreEqual(expectedPlayers, actualPlayers);
         }
+
         [Test]
         public void GetFieldsListReturnCorrectList()
         {
-            Tuple<string, Monopoly.Type, int, bool>[] expectedCompanies = 
-                new Tuple<string, Monopoly.Type, int, bool>[]{
-                new Tuple<string,Monopoly.Type,int,bool>("Ford",Monopoly.Type.AUTO,0,false),
-                new Tuple<string,Monopoly.Type,int,bool>("MCDonald", Monopoly.Type.FOOD, 0, false),
-                new Tuple<string,Monopoly.Type,int,bool>("Lamoda", Monopoly.Type.CLOTHER, 0, false),
-                new Tuple<string, Monopoly.Type, int, bool>("Air Baltic",Monopoly.Type.TRAVEL,0,false),
-                new Tuple<string, Monopoly.Type, int, bool>("Nordavia",Monopoly.Type.TRAVEL,0,false),
-                new Tuple<string, Monopoly.Type, int, bool>("Prison",Monopoly.Type.PRISON,0,false),
-                new Tuple<string, Monopoly.Type, int, bool>("MCDonald",Monopoly.Type.FOOD,0,false),
-                new Tuple<string, Monopoly.Type, int, bool>("TESLA",Monopoly.Type.AUTO,0,false)
+            var expectedCompanies = new[] {
+                new FieldInfo("Ford",       FieldType.AUTO),
+                new FieldInfo("MCDonald",   FieldType.FOOD),
+                new FieldInfo("Lamoda",     FieldType.CLOTHER),
+                new FieldInfo("Air Baltic", FieldType.TRAVEL),
+                new FieldInfo("Nordavia",   FieldType.TRAVEL),
+                new FieldInfo("Prison",     FieldType.PRISON),
+                new FieldInfo("MCDonald",   FieldType.FOOD),
+                new FieldInfo("TESLA",      FieldType.AUTO)
             };
-            string[] players = new string[] { "Peter", "Ekaterina", "Alexander" };
-            Monopoly monopoly = new Monopoly(players, 3);
-            Tuple<string, Monopoly.Type, int, bool>[] actualCompanies = monopoly.GetFieldsList().ToArray();
+
+            var players = new[] { "Peter", "Ekaterina", "Alexander" };
+
+            var monopoly = new Monopoly(players);
+
+            var actualCompanies = monopoly.GetFieldsList();
             Assert.AreEqual(expectedCompanies, actualCompanies);
         }
+
         [Test]
         public void PlayerBuyNoOwnedCompanies()
         {
-            string[] players = new string[] { "Peter", "Ekaterina", "Alexander" };
-            Monopoly monopoly = new Monopoly(players, 3);
-            Tuple<string, Monopoly.Type, int, bool> x = monopoly.GetFieldByName("Ford");
-            monopoly.Buy(1, x);
-            Tuple<string,int> actualPlayer = monopoly.GetPlayerInfo(1);
-            Tuple<string, int> expectedPlayer = new Tuple<string, int>("Peter", 5500);
+            var players = new[] { "Peter", "Ekaterina", "Alexander" };
+
+            var monopoly = new Monopoly(players);
+
+            var actualPlayerIdx = 1;
+
+            var field = monopoly.GetFieldByName("Ford");
+            monopoly.Buy(actualPlayerIdx, field);
+            
+            var expectedPlayer = new PlayerInfo("Peter", 5500);
+            var actualPlayer = monopoly.GetPlayerInfo(actualPlayerIdx);
             Assert.AreEqual(expectedPlayer, actualPlayer);
-            Tuple<string, Monopoly.Type, int, bool> actualField = monopoly.GetFieldByName("Ford");
-            Assert.AreEqual(1, actualField.Item3);
+
+            var actualField = monopoly.GetFieldByName("Ford");
+            Assert.AreEqual(actualPlayer, actualField.Owner);
         }
+
         [Test]
         public void RentaShouldBeCorrectTransferMoney()
         {
-            string[] players = new string[] { "Peter", "Ekaterina", "Alexander" };
-            Monopoly monopoly = new Monopoly(players, 3);
-            Tuple<string, Monopoly.Type, int, bool>  x = monopoly.GetFieldByName("Ford");
-            monopoly.Buy(1, x);
-            x = monopoly.GetFieldByName("Ford");
-            monopoly.Renta(2, x);
-            Tuple<string, int> player1 = monopoly.GetPlayerInfo(1);
-            Assert.AreEqual(5750, player1.Item2);
-            Tuple<string, int> player2 = monopoly.GetPlayerInfo(2);
-            Assert.AreEqual(5750, player2.Item2);
+            var players = new[] { "Peter", "Ekaterina", "Alexander" };
+            var monopoly = new Monopoly(players);
+
+            var actualField = monopoly.GetFieldByName("Ford");
+
+            monopoly.Buy(1, actualField);
+
+            actualField = monopoly.GetFieldByName("Ford");
+            monopoly.Renta(2, actualField);
+
+            var player1 = monopoly.GetPlayerInfo(1);
+            Assert.AreEqual(5750, player1.Cash);
+
+            var player2 = monopoly.GetPlayerInfo(2);
+            Assert.AreEqual(5750, player2.Cash);
         }
     }
 }
