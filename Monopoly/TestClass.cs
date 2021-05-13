@@ -2,6 +2,7 @@
 // See documentation : https://github.com/nunit/docs/wiki/NUnit-Documentation
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Monopoly.Models;
 
@@ -55,7 +56,7 @@ namespace Monopoly
             var expectedCompanies = new[] {
                 new FieldInfo("Ford",       FieldType.AUTO),
                 new FieldInfo("MCDonald",   FieldType.FOOD),
-                new FieldInfo("Lamoda",     FieldType.CLOTHER),
+                new FieldInfo("Lamoda",     FieldType.CLOTHES),
                 new FieldInfo("Air Baltic", FieldType.TRAVEL),
                 new FieldInfo("Nordavia",   FieldType.TRAVEL),
                 new FieldInfo("Prison",     FieldType.PRISON),

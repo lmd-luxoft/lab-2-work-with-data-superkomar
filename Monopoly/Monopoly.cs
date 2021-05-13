@@ -25,7 +25,7 @@ namespace Monopoly
             _fields = new List<FieldInfo>() {
                 new FieldInfo("Ford",       FieldType.AUTO),
                 new FieldInfo("MCDonald",   FieldType.FOOD),
-                new FieldInfo("Lamoda",     FieldType.CLOTHER),
+                new FieldInfo("Lamoda",     FieldType.CLOTHES),
                 new FieldInfo("Air Baltic", FieldType.TRAVEL),
                 new FieldInfo("Nordavia",   FieldType.TRAVEL),
                 new FieldInfo("Prison",     FieldType.PRISON),
@@ -47,7 +47,7 @@ namespace Monopoly
             var player = GetPlayerInfo(playerIdx);
 
             if (!fieldInfo.IsFree
-                || !fieldInfo.Type.IsPossibleToBuy()
+                || !fieldInfo.IsPossibleToBuy
                 || player.Cash <= fieldInfo.Price)
             {
                 return false;
