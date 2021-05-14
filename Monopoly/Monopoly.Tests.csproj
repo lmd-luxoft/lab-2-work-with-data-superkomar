@@ -11,10 +11,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Monopoly</RootNamespace>
     <AssemblyName>Monopoly</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,17 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\FieldTypes\FieldAuto.cs" />
+    <Compile Include="Models\FieldTypes\FieldBank.cs" />
+    <Compile Include="Models\FieldTypes\FieldClothes.cs" />
+    <Compile Include="Models\FieldTypes\FieldEmpty.cs" />
+    <Compile Include="Models\FieldTypes\FieldFood.cs" />
+    <Compile Include="Models\FieldTypes\FieldPrison.cs" />
+    <Compile Include="Models\FieldTypes\FieldTravel.cs" />
+    <Compile Include="Models\FieldType.cs" />
+    <Compile Include="Models\FieldInfo.cs" />
+    <Compile Include="Models\FieldTypes\FieldTypeBase.cs" />
+    <Compile Include="Models\PlayerInfo.cs" />
     <Compile Include="Monopoly.cs" />
     <Compile Include="TestClass.cs" />
   </ItemGroup>
